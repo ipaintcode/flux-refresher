@@ -1,13 +1,25 @@
 import dispatcher from "../appDispatcher";
 import * as courseApi from "../api/courseApi";
-import actionType from "./actionTypes";
+import actionTypes from "./actionTypes";
 
 export function saveCourse(course) {
   return courseApi.saveCourse(course).then(savedCourse => {
     // Hey dispatcher, go tell all the stores a course was just created.
     dispatcher.dispatch({
-      actionType: actionType.CREATE_COURSE,
+      actionType: course.id
+        ? actionTypes.UPDATE_COURSE
+        : actionTypes.CREATE_COURSE,
       course: savedCourse
+    });
+  });
+}
+
+export function loadCourses() {
+  return courseApi.getCourses().then(courses => {
+    // Hey dispatcher, go tell all the stores a course was just created.
+    dispatcher.dispatch({
+      actionType: actionTypes.LOAD_COURSES,
+      courses
     });
   });
 }
